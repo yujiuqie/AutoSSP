@@ -2,6 +2,7 @@
 
 import urllib2
 import re
+import base64_codec
 
 a_section = dict()
 b_section = dict()
@@ -93,6 +94,9 @@ def configIn(item):
 
                 c_section['method'] = get_middle_str(item,u'加密方式:','</h4>')
 
+def encode_utf8(unicodestring):
+
+    return str(unicodestring[0]).encode("utf-8")
 
 def GetPage(myUrl):
 
@@ -119,11 +123,20 @@ def GetPage(myUrl):
     print(b_section)
     print(c_section)
 
+    base64string = encode_utf8(a_section['method']) + ':' + encode_utf8(a_section['password']) + '@' + encode_utf8(a_section['server']) + ':' + encode_utf8(a_section['server_port'])
+
+    finalurl = 'ss://' + str(base64_codec.base64_encode(base64string)[0])
+
+    print(finalurl)
 
 # 主函数
 def main():
 
     GetPage('http://www.ishadowsocks.net/')
+
+    # finalurl = str(base64_codec.base64_decode('eyJjdXJyZW50IjoxLCJwcm9maWxlcyI6W3sicGFzc3dvcmQiOiI0MDE3MDcwNSIsIm1ldGhvZCI6ImFlcy0yNTYtY2ZiIiwic2VydmVyX3BvcnQiOjQ0MywicmVtYXJrcyI6IiIsInNlcnZlciI6InVzMS5pc3MudGYifSx7InBhc3N3b3JkIjoiODEyMDI5NTkiLCJtZXRob2QiOiJhZXMtMjU2LWNmYiIsInNlcnZlcl9wb3J0Ijo0NDMsInJlbWFya3MiOiIiLCJzZXJ2ZXIiOiJ1czEuaXNzLnRmIn1dfQ==')[0])
+
+    # print(finalurl)
 
 if __name__ == '__main__':
   main()
