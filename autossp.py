@@ -168,23 +168,9 @@ def update_plist_file_with(config_info):
 
     doc['plist']['dict']['string'] = list
 
-    xml_info = xmltodict.unparse(doc)
+    xml_info = xmltodict.unparse(doc,pretty = True)
 
-    str_info = encode_utf8(xml_info)
-
-    valid_info = get_middle_str(str_info,'<dict>','</dict>')
-
-    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
-
-        full_info = fd.read()
-
-    strinfo = re.compile(r'%s(.+?)%s'%('<dict>','</dict>'))
-    b = strinfo.sub(xml_info,xml_info)
-    print b
-
-    re.subn(strinfo, newstring, subject)
-
-    with open("minidom_example.xml", "w") as f:
+    with open("clowwindy.ShadowsocksX.plist", "w") as f:
         f.write(xml_info)
 
 # 主函数

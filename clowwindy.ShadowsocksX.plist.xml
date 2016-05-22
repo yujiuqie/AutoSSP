@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PBS</key>
+	<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>
+	<key>ShadowsocksIsRunning</key>
+	<true/>
+	<key>ShadowsocksMode</key>
+	<string>auto</string>
+	<key>config</key>
+	<data>
+	eyJjdXJyZW50IjozLCJwcm9maWxlcyI6W3sicGFzc3dvcmQiOiJqSDMxODUyMCIsIm1l
+	dGhvZCI6IlJDNC1NRDUiLCJzZXJ2ZXJfcG9ydCI6MTAwNzAsInJlbWFya3MiOiIiLCJz
+	ZXJ2ZXIiOiJ1cy1sYS1jYS0ycy5qLWoucHcifSx7InBhc3N3b3JkIjoiakgzMTg1MjAi
+	LCJtZXRob2QiOiJSQzQtTWQ1Iiwic2VydmVyX3BvcnQiOjEwMDcwLCJyZW1hcmtzIjoi
+	Iiwic2VydmVyIjoidXMtcHgtYXotMXMuai1qLnB3In0seyJwYXNzd29yZCI6ImpIMzE4
+	NTIwIiwibWV0aG9kIjoiUkM0LU1kNSIsInNlcnZlcl9wb3J0IjoxMDA3MCwicmVtYXJr
+	cyI6IiIsInNlcnZlciI6ImpwLXR5LWsyLmotai5wdyJ9LHsicGFzc3dvcmQiOiIwODU1
+	NTEwNiIsIm1ldGhvZCI6ImFlcy0yNTYtY2ZiIiwic2VydmVyX3BvcnQiOjQ0MywicmVt
+	YXJrcyI6IuWFjei0uUMiLCJzZXJ2ZXIiOiJqcDMuaXNzLnRmIn1dfQ==
+	</data>
+	<key>proxy encryption</key>
+	<string>aes-256-cfb</string>
+	<key>proxy ip</key>
+	<string>jp3.iss.tf</string>
+	<key>proxy password</key>
+	<string>08555106</string>
+	<key>proxy port</key>
+	<string>443</string>
+	<key>public server</key>
+	<false/>
+</dict>
+</plist>
