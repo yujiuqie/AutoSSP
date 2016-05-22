@@ -129,12 +129,15 @@ def GetPage(myUrl):
     print(b_section)
     print(c_section)
 
-    base64string = encode_utf8(a_section['method']) + ':' + encode_utf8(a_section['password']) + '@' + encode_utf8(a_section['server']) + ':' + encode_utf8(a_section['server_port'])
+    base64string(b_section)
+
+def base64string(config_info):
+
+    base64string = encode_utf8(config_info['method']) + ':' + encode_utf8(config_info['password']) + '@' + encode_utf8(config_info['server']) + ':' + encode_utf8(config_info['server_port'])
 
     finalurl = 'ss://' + str(base64_codec.base64_encode(base64string)[0])
 
     print(finalurl)
-
 
 # 获取 获取 ishadowsocks for mac plist 文件，进行解析和重新生成
 
@@ -150,7 +153,7 @@ def update_plist_file_with(config_info):
 
     data_value = str(base64_codec.base64_encode(item_a)[0]).decode("utf-8")
 
-    result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<true/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
+    result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<false/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
 
     list = result_value.split('*')
 
@@ -160,13 +163,13 @@ def update_plist_file_with(config_info):
 
         for item in list:
 
-            f.writelines(str(item) + "\n")
+            f.write(str(item) + "\n")
 
     export_setting = "plutil -convert binary1 " + file_name
 
     subprocess.Popen(export_setting, shell=True).wait()
 
-    replace_setting = "mv" + file_name +"~/Library/Preferences/clowwindy.ShadowsocksX.plist"
+    replace_setting = "mv " + file_name +" ~/Library/Preferences/clowwindy.ShadowsocksX.plist"
 
     subprocess.Popen(replace_setting, shell=True).wait()
 
@@ -179,7 +182,7 @@ def main():
 
     # print(finalurl)
 
-    update_plist_file_with(b_section)
+    update_plist_file_with(a_section)
 
 if __name__ == '__main__':
   main()
