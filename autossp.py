@@ -5,6 +5,8 @@ import re
 import base64_codec
 import subprocess
 import xmltodict
+import json
+import time
 
 # 获取 ishadowsocks 免费密码并生成配置文件
 
@@ -144,34 +146,29 @@ def replace(list = [],index = 0,info = ''):
 
 def update_plist_file_with(config_info):
 
-    #导出 clowwindy.ShadowsocksX.plist 并转换为可编辑文件
-
-    export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
-    subprocess.Popen(export_setting, shell=True).wait()
-
-    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
-
-        doc = xmltodict.parse(fd.read())
-
-    # {"current":0,"profiles":[{"password":"56225220","method":"aes-256-cfb","server_port":443,"remarks":"","server":"us1.iss.tf"}]}
-
     item_a = '{"current":0,"profiles":[{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}]}'
 
-    doc['plist']['dict']['data'] = str(base64_codec.base64_encode(item_a)[0]).decode("utf-8")
+    data_value = str(base64_codec.base64_encode(item_a)[0]).decode("utf-8")
 
-    list = doc['plist']['dict']['string']
+    result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<true/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
 
-    list = replace(list,2,config_info['method'])
-    list = replace(list,3,config_info['server'])
-    list = replace(list,4,config_info['password'])
-    list = replace(list,5,config_info['server_port'])
+    list = result_value.split('*')
 
-    doc['plist']['dict']['string'] = list
+    file_name = 'temp_' + str(time.time()) + '.plist'
 
-    xml_info = xmltodict.unparse(doc,pretty = True)
+    with open(file_name, "w+") as f:
 
-    with open("clowwindy.ShadowsocksX.plist", "w") as f:
-        f.write(xml_info)
+        for item in list:
+
+            f.writelines(str(item) + "\n")
+
+    export_setting = "plutil -convert binary1 " + file_name
+
+    subprocess.Popen(export_setting, shell=True).wait()
+
+    replace_setting = "mv" + file_name +"~/Library/Preferences/clowwindy.ShadowsocksX.plist"
+
+    subprocess.Popen(replace_setting, shell=True).wait()
 
 # 主函数
 def main():
@@ -182,7 +179,7 @@ def main():
 
     # print(finalurl)
 
-    update_plist_file_with(a_section)
+    update_plist_file_with(b_section)
 
 if __name__ == '__main__':
   main()

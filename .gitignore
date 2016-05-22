@@ -90,3 +90,4 @@ ENV/
 
 # Add 20160522
 .idea
+*.plist
