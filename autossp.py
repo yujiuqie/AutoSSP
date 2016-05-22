@@ -3,6 +3,10 @@
 import urllib2
 import re
 import base64_codec
+import subprocess
+import xmltodict
+
+# 获取 ishadowsocks 免费密码并生成配置文件
 
 a_section = dict()
 b_section = dict()
@@ -129,6 +133,60 @@ def GetPage(myUrl):
 
     print(finalurl)
 
+
+# 获取 获取 ishadowsocks for mac plist 文件，进行解析和重新生成
+
+def replace(list = [],index = 0,info = ''):
+
+    list.remove(list[index])
+    list.insert(index,encode_utf8(info).decode("utf-8"))
+    return list
+
+def update_plist_file_with(config_info):
+
+    #导出 clowwindy.ShadowsocksX.plist 并转换为可编辑文件
+
+    export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
+    subprocess.Popen(export_setting, shell=True).wait()
+
+    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
+
+        doc = xmltodict.parse(fd.read())
+
+    # {"current":0,"profiles":[{"password":"56225220","method":"aes-256-cfb","server_port":443,"remarks":"","server":"us1.iss.tf"}]}
+
+    item_a = '{"current":0,"profiles":[{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}]}'
+
+    doc['plist']['dict']['data'] = str(base64_codec.base64_encode(item_a)[0]).decode("utf-8")
+
+    list = doc['plist']['dict']['string']
+
+    list = replace(list,2,config_info['method'])
+    list = replace(list,3,config_info['server'])
+    list = replace(list,4,config_info['password'])
+    list = replace(list,5,config_info['server_port'])
+
+    doc['plist']['dict']['string'] = list
+
+    xml_info = xmltodict.unparse(doc)
+
+    str_info = encode_utf8(xml_info)
+
+    valid_info = get_middle_str(str_info,'<dict>','</dict>')
+
+    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
+
+        full_info = fd.read()
+
+    strinfo = re.compile(r'%s(.+?)%s'%('<dict>','</dict>'))
+    b = strinfo.sub(xml_info,xml_info)
+    print b
+
+    re.subn(strinfo, newstring, subject)
+
+    with open("minidom_example.xml", "w") as f:
+        f.write(xml_info)
+
 # 主函数
 def main():
 
@@ -137,6 +195,8 @@ def main():
     # finalurl = str(base64_codec.base64_decode('eyJjdXJyZW50IjoxLCJwcm9maWxlcyI6W3sicGFzc3dvcmQiOiI0MDE3MDcwNSIsIm1ldGhvZCI6ImFlcy0yNTYtY2ZiIiwic2VydmVyX3BvcnQiOjQ0MywicmVtYXJrcyI6IiIsInNlcnZlciI6InVzMS5pc3MudGYifSx7InBhc3N3b3JkIjoiODEyMDI5NTkiLCJtZXRob2QiOiJhZXMtMjU2LWNmYiIsInNlcnZlcl9wb3J0Ijo0NDMsInJlbWFya3MiOiIiLCJzZXJ2ZXIiOiJ1czEuaXNzLnRmIn1dfQ==')[0])
 
     # print(finalurl)
+
+    update_plist_file_with(a_section)
 
 if __name__ == '__main__':
   main()
