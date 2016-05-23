@@ -189,13 +189,7 @@ def update_plist_file_with(config_info):
 
 def fetch_a_section():
 
-    fetch_free_config_info('http://www.ishadowsocks.net/')
-
-    print_qrcode_info(b_section)
-
-    update_plist_file_with(b_section)
-
-    # fetch_section(a_section)
+    fetch_section(a_section)
 
 def fetch_b_section():
 
@@ -210,6 +204,8 @@ def fetch_section(section):
     fetch_free_config_info('http://www.ishadowsocks.net/')
 
     update_plist_file_with(section)
+
+    print_qrcode_info(section)
 
 # 主函数
 def main():
