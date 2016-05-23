@@ -5,7 +5,6 @@ import re
 import base64_codec
 import subprocess
 import xmltodict
-import json
 import time
 
 # 获取 ishadowsocks 免费密码并生成配置文件
@@ -147,11 +146,41 @@ def replace(list = [],index = 0,info = ''):
     list.insert(index,encode_utf8(info).decode("utf-8"))
     return list
 
+def add_new_item_to_data(config_info):
+
+    export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
+    subprocess.Popen(export_setting, shell=True).wait()
+
+    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
+        doc = xmltodict.parse(fd.read())
+
+    print(str(doc['plist']['dict']['data']))
+
+    current_profile_info = base64_codec.base64_decode(str(doc['plist']['dict']['data']))
+
+    print(current_profile_info)
+    #
+    # profile_info = get_middle_str(str(current_profile_info),':\[',']}')
+    #
+    # print(profile_info)
+
+    start_config_string = '{"current":0,"profiles":['
+
+    # mid_config_string = profile_info[0] + '{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}'
+
+    mid_config_string = '{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}'
+
+    end_config_string = ']}'
+
+    full_config_string = start_config_string + mid_config_string + end_config_string
+
+    data_value = base64_codec.base64_encode(start_config_string + mid_config_string + end_config_string)
+
+    return data_value[0]
+
 def update_plist_file_with(config_info):
 
-    item_a = '{"current":0,"profiles":[{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}]}'
-
-    data_value = str(base64_codec.base64_encode(item_a)[0]).decode("utf-8")
+    data_value = add_new_item_to_data(config_info)
 
     result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<false/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
 
@@ -169,7 +198,7 @@ def update_plist_file_with(config_info):
 
     subprocess.Popen(export_setting, shell=True).wait()
 
-    replace_setting = "mv " + file_name +" ~/Library/Preferences/clowwindy.ShadowsocksX.plist"
+    replace_setting = "defaults import clowwindy.ShadowsocksX " + file_name
 
     subprocess.Popen(replace_setting, shell=True).wait()
 
@@ -177,10 +206,6 @@ def update_plist_file_with(config_info):
 def main():
 
     GetPage('http://www.ishadowsocks.net/')
-
-    # finalurl = str(base64_codec.base64_decode('eyJjdXJyZW50IjoxLCJwcm9maWxlcyI6W3sicGFzc3dvcmQiOiI0MDE3MDcwNSIsIm1ldGhvZCI6ImFlcy0yNTYtY2ZiIiwic2VydmVyX3BvcnQiOjQ0MywicmVtYXJrcyI6IiIsInNlcnZlciI6InVzMS5pc3MudGYifSx7InBhc3N3b3JkIjoiODEyMDI5NTkiLCJtZXRob2QiOiJhZXMtMjU2LWNmYiIsInNlcnZlcl9wb3J0Ijo0NDMsInJlbWFya3MiOiIiLCJzZXJ2ZXIiOiJ1czEuaXNzLnRmIn1dfQ==')[0])
-
-    # print(finalurl)
 
     update_plist_file_with(a_section)
 
