@@ -183,9 +183,9 @@ def update_plist_file_with(config_info):
 
     subprocess.Popen(import_new_plist, shell=True).wait()
 
-    # rm_temp_file = "rm " + file_name
-    #
-    # subprocess.Popen(rm_temp_file, shell=True).wait()
+    rm_temp_file = "rm " + file_name
+
+    subprocess.Popen(rm_temp_file, shell=True).wait()
 
 def fetch_a_section():
 
