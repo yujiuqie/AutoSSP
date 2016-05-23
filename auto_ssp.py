@@ -1,5 +1,7 @@
 #coding=utf-8
 
+#Created by Alfred Jiang 20160523
+
 import urllib2
 import re
 import base64_codec
@@ -178,9 +180,9 @@ def update_plist_file_with(config_info):
 
     subprocess.Popen(import_new_plist, shell=True).wait()
 
-    rm_temp_file = "rm " + file_name
-
-    subprocess.Popen(rm_temp_file, shell=True).wait()
+    # rm_temp_file = "rm " + file_name
+    #
+    # subprocess.Popen(rm_temp_file, shell=True).wait()
 
 # 主函数
 def main():
@@ -192,4 +194,5 @@ def main():
     update_plist_file_with(a_section)
 
 if __name__ == '__main__':
+
   main()
