@@ -98,10 +98,6 @@ def generate_configuration_file(item):
 
                 c_section['method'] = get_middle_str(item,u'加密方式:','</h4>')
 
-def encode_utf8(unicodestring):
-
-    return str(unicodestring[0]).encode("utf-8")
-
 def fetch_free_config_info(info_url):
 
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
@@ -124,6 +120,10 @@ def fetch_free_config_info(info_url):
 
             generate_configuration_file(item)
 
+def encode_utf8(unicodestring):
+
+    return str(unicodestring[0]).encode("utf-8")
+
 def print_qrcode_info(config_info):
 
     base64string = encode_utf8(config_info['method']) + ':' + encode_utf8(config_info['password']) + '@' + encode_utf8(config_info['server']) + ':' + encode_utf8(config_info['server_port'])
@@ -132,15 +132,7 @@ def print_qrcode_info(config_info):
 
     print(finalurl)
 
-# 获取 获取 ishadowsocks for mac plist 文件，进行解析和重新生成
-
-def replace(list = [],index = 0,info = ''):
-
-    list.remove(list[index])
-    list.insert(index,encode_utf8(info).decode("utf-8"))
-    return list
-
-def add_new_item_to_data(config_info):
+def generate_new_data(config_info):
 
     # export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
     # subprocess.Popen(export_setting, shell=True).wait()
@@ -164,7 +156,7 @@ def add_new_item_to_data(config_info):
 
 def update_plist_file_with(config_info):
 
-    data_value = add_new_item_to_data(config_info)
+    data_value = generate_new_data(config_info)
 
     result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<false/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
 
@@ -178,17 +170,17 @@ def update_plist_file_with(config_info):
 
             f.write(str(item) + "\n")
 
-    export_setting = "plutil -convert binary1 " + file_name
+    generate_binary_plist = "plutil -convert binary1 " + file_name
 
-    subprocess.Popen(export_setting, shell=True).wait()
+    subprocess.Popen(generate_binary_plist, shell=True).wait()
 
-    replace_setting = "defaults import clowwindy.ShadowsocksX " + file_name
+    import_new_plist = "defaults import clowwindy.ShadowsocksX " + file_name
 
-    subprocess.Popen(replace_setting, shell=True).wait()
+    subprocess.Popen(import_new_plist, shell=True).wait()
 
-    replace_setting = "rm " + file_name
+    rm_temp_file = "rm " + file_name
 
-    subprocess.Popen(replace_setting, shell=True).wait()
+    subprocess.Popen(rm_temp_file, shell=True).wait()
 
 # 主函数
 def main():
