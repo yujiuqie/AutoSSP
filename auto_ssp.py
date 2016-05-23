@@ -164,6 +164,9 @@ def update_plist_file_with(config_info):
 
     list = result_value.split('*')
 
+    # file_name = 'temp_' + str(time.time()) + '.plist'
+    file_name = 'auto.ssp.1704.plist'
+
     file_name = 'temp_' + str(time.time()) + '.plist'
 
     with open(file_name, "w+") as f:
@@ -184,14 +187,40 @@ def update_plist_file_with(config_info):
     #
     # subprocess.Popen(rm_temp_file, shell=True).wait()
 
-# 主函数
-def main():
+def fetch_a_section():
 
     fetch_free_config_info('http://www.ishadowsocks.net/')
 
     print_qrcode_info(b_section)
 
-    update_plist_file_with(a_section)
+    update_plist_file_with(b_section)
+
+    # fetch_section(a_section)
+
+def fetch_b_section():
+
+    fetch_section(b_section)
+
+def fetch_c_section():
+
+    fetch_section(c_section)
+
+def fetch_section(section):
+
+    fetch_free_config_info('http://www.ishadowsocks.net/')
+
+    update_plist_file_with(section)
+
+# 主函数
+def main():
+
+    fetch_a_section()
+
+    # fetch_free_config_info('http://www.ishadowsocks.net/')
+    #
+    # print_qrcode_info(b_section)
+    #
+    # update_plist_file_with(a_section)
 
 if __name__ == '__main__':
 
