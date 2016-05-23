@@ -4,10 +4,9 @@ import urllib2
 import re
 import base64_codec
 import subprocess
-import xmltodict
 import time
 
-# 获取 ishadowsocks 免费密码并生成配置文件
+# 获取 ishadowsocks 免费密码并更新配置文件
 
 a_section = dict()
 b_section = dict()
@@ -23,7 +22,7 @@ def get_middle_str(content,startStr,endStr):
 
     return foundallitems
 
-def configIn(item):
+def generate_configuration_file(item):
 
     myItems = re.findall('<h4>.*?</h4>',item,re.S)
 
@@ -103,34 +102,29 @@ def encode_utf8(unicodestring):
 
     return str(unicodestring[0]).encode("utf-8")
 
-def GetPage(myUrl):
+def fetch_free_config_info(info_url):
 
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    headers = { 'User-Agent' : user_agent }
-    req = urllib2.Request(myUrl, headers = headers)
-    myResponse = urllib2.urlopen(req)
-    myPage = myResponse.read()
-    #encode的作用是将unicode编码转换成其他编码的字符串
-    #decode的作用是将其他编码的字符串转换成unicode编码
-    unicodePage = myPage.decode("utf-8")
 
-    # 找出所有class="content"的div标记
-    #re.S是任意匹配模式，也就是.可以匹配换行符
-    myItems = re.findall('<div class="col-lg-4 text-center">.*?</div>',unicodePage,re.S)
-    items = []
-    for item in myItems:
+    headers = { 'User-Agent' : user_agent }
+
+    req = urllib2.Request(info_url, headers = headers)
+
+    info_response = urllib2.urlopen(req)
+
+    config_info = info_response.read()
+
+    unicode_info = config_info.decode("utf-8")
+
+    config_items = re.findall('<div class="col-lg-4 text-center">.*?</div>',unicode_info,re.S)
+
+    for item in config_items:
 
         if u'服务器地址' in item:
 
-            configIn(item)
+            generate_configuration_file(item)
 
-    print(a_section)
-    print(b_section)
-    print(c_section)
-
-    base64string(b_section)
-
-def base64string(config_info):
+def print_qrcode_info(config_info):
 
     base64string = encode_utf8(config_info['method']) + ':' + encode_utf8(config_info['password']) + '@' + encode_utf8(config_info['server']) + ':' + encode_utf8(config_info['server_port'])
 
@@ -148,25 +142,15 @@ def replace(list = [],index = 0,info = ''):
 
 def add_new_item_to_data(config_info):
 
-    export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
-    subprocess.Popen(export_setting, shell=True).wait()
-
-    with open('clowwindy.ShadowsocksX.plist.xml') as fd:
-        doc = xmltodict.parse(fd.read())
-
-    print(str(doc['plist']['dict']['data']))
-
-    current_profile_info = base64_codec.base64_decode(str(doc['plist']['dict']['data']))
-
-    print(current_profile_info)
+    # export_setting = "plutil -convert xml1 ~/Library/Preferences/clowwindy.ShadowsocksX.plist -o clowwindy.ShadowsocksX.plist.xml"
+    # subprocess.Popen(export_setting, shell=True).wait()
     #
-    # profile_info = get_middle_str(str(current_profile_info),':\[',']}')
+    # with open('clowwindy.ShadowsocksX.plist.xml') as fd:
+    #     doc = xmltodict.parse(fd.read())
     #
-    # print(profile_info)
+    # current_profile_info = base64_codec.base64_decode(str(doc['plist']['dict']['data']))
 
     start_config_string = '{"current":0,"profiles":['
-
-    # mid_config_string = profile_info[0] + '{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}'
 
     mid_config_string = '{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}'
 
@@ -174,7 +158,7 @@ def add_new_item_to_data(config_info):
 
     full_config_string = start_config_string + mid_config_string + end_config_string
 
-    data_value = base64_codec.base64_encode(start_config_string + mid_config_string + end_config_string)
+    data_value = base64_codec.base64_encode(full_config_string)
 
     return data_value[0]
 
@@ -202,10 +186,16 @@ def update_plist_file_with(config_info):
 
     subprocess.Popen(replace_setting, shell=True).wait()
 
+    replace_setting = "rm " + file_name
+
+    subprocess.Popen(replace_setting, shell=True).wait()
+
 # 主函数
 def main():
 
-    GetPage('http://www.ishadowsocks.net/')
+    fetch_free_config_info('http://www.ishadowsocks.net/')
+
+    print_qrcode_info(b_section)
 
     update_plist_file_with(a_section)
 
