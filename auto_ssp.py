@@ -160,12 +160,33 @@ def update_plist_file_with(config_info):
 
     data_value = generate_new_data(config_info)
 
-    result_value = r'<?xml version="1.0" encoding="UTF-8"?>*<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">*<plist version="1.0">*<dict>*<key>PBS</key>*<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>*<key>ShadowsocksIsRunning</key>*<false/>*<key>ShadowsocksMode</key>*<string>auto</string>*<key>config</key>*<data>*%s</data>*<key>proxy encryption</key>*<string>%s</string>*<key>proxy ip</key>*<string>%s</string>*<key>proxy password</key>*<string>%s</string>*<key>proxy port</key>*<string>%s</string>*<key>public server</key>*<false/>*</dict>*</plist>'%(data_value,config_info['method'][0],config_info['server'][0],config_info['password'][0],config_info['server_port'][0])
-
-    list = result_value.split('*')
-
-    # file_name = 'temp_' + str(time.time()) + '.plist'
-    file_name = 'auto.ssp.1704.plist'
+    list = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
+        '<plist version="1.0">',
+        '<dict>',
+        '<key>PBS</key>',
+        '<string>Copv9p5PRHLeK66opkTUkg/nOAlBLd9A3+659k/x3nUmz2O1HoVxtuxOjhRzVzNG</string>',
+        '<key>ShadowsocksIsRunning</key>',
+        '<false/>',
+        '<key>ShadowsocksMode</key>',
+        '<string>auto</string>',
+        '<key>config</key>',
+        '<data>',
+        ''+ data_value +'</data>',
+        '<key>proxy encryption</key>',
+        '<string>' + config_info.get('method')[0] + '</string>',
+        '<key>proxy ip</key>',
+        '<string>' + config_info.get('server')[0] + '</string>',
+        '<key>proxy password</key>',
+        '<string>' + config_info.get('password')[0] + '</string>',
+        '<key>proxy port</key>',
+        '<string>' + config_info.get('server_port')[0] + '</string>',
+        '<key>public server</key>',
+        '<false/>',
+        '</dict>',
+        '</plist>'
+    ]
 
     file_name = 'temp_' + str(time.time()) + '.plist'
 
