@@ -1,13 +1,19 @@
-language: python
+# Mac OS X Python build
+language:
+- objective-c
 python:
-- '2.7'
-matrix:
-    include:
-      - os: osx
-        language: generic
-        env: TOXENV=py27
-sudo: required
+- "2.7"
 install:
-  - pip install -r requirements.txt
+# install python via brew
+- brew install python
+# make brews python the system default
+- brew link --overwrite python
+- which python
+- python --version
+# pip init
+- pip install --upgrade pip
+# final pip installs
+- pip install git+https://github.com/metachris/py2app.git
+- pip install git+https://github.com/jaredks/rumps.git
 script:
   - python tests.py
