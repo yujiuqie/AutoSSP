@@ -1,4 +1,5 @@
 # AutoSSP
-An easy way to fetch shadowsocks's free account configuration.
+
+An easy way to fetch free account configuration of Shadowsocks.
 
 
