@@ -1,4 +1,3 @@
--e .
--e hg+https://bitbucket.org/ronaldoussoren/pyobjc#egg=pyobjc
--e git+https://github.com/metachris/py2app.git#egg=py2app
--e git+https://github.com/jaredks/rumps.git#egg=rumps
+hg+https://bitbucket.org/ronaldoussoren/pyobjc
+git+https://github.com/metachris/py2app.git#egg=py2app
+git+https://github.com/jaredks/rumps.git#egg=rumps
