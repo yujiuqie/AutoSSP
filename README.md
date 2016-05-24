@@ -6,17 +6,17 @@ An easy way to fetch free account configuration of Shadowsocks.
 
 ## Usage
 
-#### 1. By *AutoSSP.app* 
+###### 1. By AutoSSP.app 
 
-* Download *AutoSSP.app* from [Here](https://github.com/viktyz/AutoSSP/releases/download/0.0.1/AutoSSP.zip)
-* Double click *AutoSSP.app* to open SSP.
+* Download `AutoSSP.app` from [Here](https://github.com/viktyz/AutoSSP/releases/download/0.0.1/AutoSSP.zip)
+* Double click `AutoSSP.app` to open SSP.
 * Select any service from the drop list of SSP.
 * Then the configuration of the Shadowsocks will be updated.
 
-#### 2. By *Terminal* with *auto_ssp.py*
+###### 2. By Terminal with auto_ssp.py
 
-* Save [*auto_ssp.py*](https://github.com/viktyz/AutoSSP/blob/master/auto_ssp.py) to your mac.
-* Execute the following command in your *Terminal*
+* Save [auto_ssp.py](https://github.com/viktyz/AutoSSP/blob/master/auto_ssp.py) to your mac.
+* Execute the following command in your Terminal
 ```shell 
 python auto_ssp.py
 ```
