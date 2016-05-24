@@ -22,6 +22,13 @@ python auto_ssp.py
 ```
 * Then the configuration of the Shadowsocks will be updated.
 
+## Required
+
+If your want to build `AutoSSP.app` by source code of AutoSSP. The following python modules are required.
+
+* [py2app](https://pythonhosted.org/py2app/)
+* [rumps](https://github.com/jaredks/rumps)
+
 ## License
 ```
 The MIT License (MIT)
