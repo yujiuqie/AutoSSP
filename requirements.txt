@@ -1,1 +1,2 @@
-pyobjc==3.0.4
+pyobjc-core
+pyobjc
