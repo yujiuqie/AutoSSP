@@ -1,2 +1,2 @@
-pyobjc-core
-pyobjc
+git+https://github.com/metachris/py2app.git#egg=py2app
+git+https://github.com/jaredks/rumps.git#egg=rumps

@@ -1,13 +1,8 @@
-language: python
-sudo: required
+language: objective-c
 python:
-  - "2.7"
-  - "pypy"
-matrix:
-  include:
-  - os: osx
+- '2.7'
+sudo: required
 install:
   - pip install -r requirements.txt
-  - pip install -U git+https://github.com/metachris/py2app.git@master
 script:
   - python tests.py
