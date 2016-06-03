@@ -20,4 +20,5 @@ class AwesomeStatusBarApp(rumps.App):
         auto_ssp.fetch_c_section()
 
 if __name__ == "__main__":
+
     AwesomeStatusBarApp("SSP").run()

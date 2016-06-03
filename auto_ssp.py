@@ -1,6 +1,6 @@
-#coding=utf-8
+# coding=utf-8
 
-#Created by Alfred Jiang 20160523
+# Created by Alfred Jiang 20160523
 
 import urllib2
 import re
@@ -8,105 +8,115 @@ import base64_codec
 import subprocess
 import time
 
+# 网络爬虫
+# 正则表达式
+# 字符编码
+# 文件操作
+# plist - plutil
+# 执行 shell 脚本
+
 # 获取 ishadowsocks 免费密码并更新配置文件
 
 a_section = dict()
 b_section = dict()
 c_section = dict()
 
-def get_middle_str(content,startStr,endStr):
 
-    patternStr = r'%s(.+?)%s'%(startStr,endStr)
+def get_middle_str(content, start_str, end_str):
+    
+    pattern_str = r'%s(.+?)%s' % (start_str, end_str)
 
-    p = re.compile(patternStr,re.IGNORECASE)
+    p = re.compile(pattern_str, re.IGNORECASE)
 
-    foundallitems = re.findall(p,content)
+    found_all_items = re.findall(p, content)
 
-    return foundallitems
+    return found_all_items
+
 
 def generate_configuration_file(item):
+    
+    my_items = re.findall('<h4>.*?</h4>', item, re.S)
 
-    myItems = re.findall('<h4>.*?</h4>',item,re.S)
+    is_a_section = False
+    is_b_section = False
+    is_c_section = False
 
-    isASection = False
-    isBSection = False
-    isCSection = False
-
-    for item in myItems:
+    for item in my_items:
 
         if u'A服务器地址:' in item:
 
-            isASection = True
-            isBSection = False
-            isCSection = False
+            is_a_section = True
+            is_b_section = False
+            is_c_section = False
 
-            a_section['server'] = get_middle_str(item,u'A服务器地址:','</h4>')
+            a_section['server'] = get_middle_str(item, u'A服务器地址:', '</h4>')
 
         if u'B服务器地址:' in item:
 
-            isASection = False
-            isBSection = True
-            isCSection = False
+            is_a_section = False
+            is_b_section = True
+            is_c_section = False
 
-            b_section['server'] = get_middle_str(item,u'B服务器地址:','</h4>')
+            b_section['server'] = get_middle_str(item, u'B服务器地址:', '</h4>')
 
         if u'C服务器地址:' in item:
 
-            isASection = False
-            isBSection = False
-            isCSection = True
+            is_a_section = False
+            is_b_section = False
+            is_c_section = True
 
-            c_section['server'] = get_middle_str(item,u'C服务器地址:','</h4>')
+            c_section['server'] = get_middle_str(item, u'C服务器地址:', '</h4>')
 
         if u'端口:' in item:
 
-            if isASection:
+            if is_a_section:
 
-                a_section['server_port'] = get_middle_str(item,u'端口:','</h4>')
+                a_section['server_port'] = get_middle_str(item, u'端口:', '</h4>')
 
-            elif isBSection:
+            elif is_b_section:
 
-                b_section['server_port'] = get_middle_str(item,u'端口:','</h4>')
+                b_section['server_port'] = get_middle_str(item, u'端口:', '</h4>')
 
-            elif isCSection:
+            elif is_c_section:
 
-                c_section['server_port'] = get_middle_str(item,u'端口:','</h4>')
+                c_section['server_port'] = get_middle_str(item, u'端口:', '</h4>')
 
         if u'密码:' in item:
 
-            if isASection:
+            if is_a_section:
 
-                a_section['password'] = get_middle_str(item,u'密码:','</h4>')
+                a_section['password'] = get_middle_str(item, u'密码:', '</h4>')
 
-            elif isBSection:
+            elif is_b_section:
 
-                b_section['password'] = get_middle_str(item,u'密码:','</h4>')
+                b_section['password'] = get_middle_str(item, u'密码:', '</h4>')
 
-            elif isCSection:
+            elif is_c_section:
 
-                c_section['password'] = get_middle_str(item,u'密码:','</h4>')
+                c_section['password'] = get_middle_str(item, u'密码:', '</h4>')
 
         if u'加密方式:' in item:
 
-            if isASection:
+            if is_a_section:
 
-                a_section['method'] = get_middle_str(item,u'加密方式:','</h4>')
+                a_section['method'] = get_middle_str(item, u'加密方式:', '</h4>')
 
-            elif isBSection:
+            elif is_b_section:
 
-                b_section['method'] = get_middle_str(item,u'加密方式:','</h4>')
+                b_section['method'] = get_middle_str(item, u'加密方式:', '</h4>')
 
-            elif isCSection:
+            elif is_c_section:
 
-                c_section['method'] = get_middle_str(item,u'加密方式:','</h4>')
+                c_section['method'] = get_middle_str(item, u'加密方式:', '</h4>')
+
 
 def fetch_free_config_info(info_url):
-
+    
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 
-    headers = { 'User-Agent' : user_agent }
+    headers = {'User-Agent': user_agent}
 
-    req = urllib2.Request(info_url, headers = headers)
+    req = urllib2.Request(info_url, headers=headers)
 
     info_response = urllib2.urlopen(req)
 
@@ -114,7 +124,7 @@ def fetch_free_config_info(info_url):
 
     unicode_info = config_info.decode("utf-8")
 
-    config_items = re.findall('<div class="col-lg-4 text-center">.*?</div>',unicode_info,re.S)
+    config_items = re.findall('<div class="col-lg-4 text-center">.*?</div>', unicode_info, re.S)
 
     for item in config_items:
 
@@ -122,17 +132,26 @@ def fetch_free_config_info(info_url):
 
             generate_configuration_file(item)
 
-def encode_utf8(unicodestring):
 
+def encode_utf8(unicodestring):
+    
     return str(unicodestring[0]).encode("utf-8")
 
-def print_qrcode_info(config_info):
 
-    base64string = encode_utf8(config_info['method']) + ':' + encode_utf8(config_info['password']) + '@' + encode_utf8(config_info['server']) + ':' + encode_utf8(config_info['server_port'])
+def print_qr_code_info(config_info):
+
+    base64string = encode_utf8(config_info['method']) \
+                   + ':' \
+                   + encode_utf8(config_info['password']) \
+                   + '@' \
+                   + encode_utf8(config_info['server']) \
+                   + ':' \
+                   + encode_utf8(config_info['server_port'])
 
     finalurl = 'ss://' + str(base64_codec.base64_encode(base64string)[0])
 
     print(finalurl)
+
 
 def generate_new_data(config_info):
 
@@ -146,7 +165,15 @@ def generate_new_data(config_info):
 
     start_config_string = '{"current":0,"profiles":['
 
-    mid_config_string = '{"password":"'+ config_info['password'][0] +'","method":"'+ config_info['method'][0] +'","server_port":'+ config_info['server_port'][0] +',"remarks":"","server":"'+ config_info['server'][0] +'"}'
+    mid_config_string = '{"password":"' \
+                        + config_info['password'][0] \
+                        + '","method":"' \
+                        + config_info['method'][0] \
+                        + '","server_port":' \
+                        + config_info['server_port'][0] \
+                        + ',"remarks":"","server":"' \
+                        + config_info['server'][0] \
+                        + '"}'
 
     end_config_string = ']}'
 
@@ -156,11 +183,12 @@ def generate_new_data(config_info):
 
     return data_value[0]
 
+
 def update_plist_file_with(config_info):
 
     data_value = generate_new_data(config_info)
 
-    list = [
+    plist = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
         '<plist version="1.0">',
@@ -173,7 +201,7 @@ def update_plist_file_with(config_info):
         '<string>auto</string>',
         '<key>config</key>',
         '<data>',
-        ''+ data_value +'</data>',
+        '' + data_value + '</data>',
         '<key>proxy encryption</key>',
         '<string>' + config_info.get('method')[0] + '</string>',
         '<key>proxy ip</key>',
@@ -191,9 +219,7 @@ def update_plist_file_with(config_info):
     file_name = 'temp_' + str(time.time()) + '.plist'
 
     with open(file_name, "w+") as f:
-
-        for item in list:
-
+        for item in plist:
             f.write(str(item) + "\n")
 
     generate_binary_plist = "plutil -convert binary1 " + file_name
@@ -208,17 +234,21 @@ def update_plist_file_with(config_info):
 
     subprocess.Popen(rm_temp_file, shell=True).wait()
 
+
 def fetch_a_section():
 
     fetch_section(a_section)
+
 
 def fetch_b_section():
 
     fetch_section(b_section)
 
+
 def fetch_c_section():
 
     fetch_section(c_section)
+
 
 def fetch_section(section):
 
@@ -226,19 +256,21 @@ def fetch_section(section):
 
     update_plist_file_with(section)
 
-    print_qrcode_info(section)
+    print_qr_code_info(section)
+
 
 # 主函数
 def main():
 
-    fetch_a_section()
+    fetch_c_section()
 
     # fetch_free_config_info('http://www.ishadowsocks.net/')
     #
-    # print_qrcode_info(b_section)
+    # print_qr_code_info(b_section)
     #
     # update_plist_file_with(a_section)
 
+
 if __name__ == '__main__':
 
-  main()
+    main()
